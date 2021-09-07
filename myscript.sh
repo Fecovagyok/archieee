@@ -86,7 +86,7 @@ $password
 $password
 EOF
 
-packages = ""
+packages=""
 
 arch-chroot /mnt << EOF
 locale-gen
