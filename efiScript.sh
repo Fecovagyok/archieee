@@ -17,35 +17,16 @@ hostname="VirtualArch"
 user="tumpek"
 password="tatiarrn"
 
+rootdevice=""
+swapdevice=""
+bootdevice=""
+
 # logging
 exec 1> >(tee "stdout.log")
 exec 2> >(tee "stderr.log")
 
-
-loadkeys hu
-timedatectl set-ntp true
-fdisk /dev/sda << EOF
-o
-n
-p
-1
-2048
-+18G
-n
-p
-2
-
-
-t
-2
-82
-a
-1
-w
-EOF
-
-rootdevice="/dev/sda1"
-swapdevice="/dev/sda2"
+# formatting boot device
+mkfs.fat -F 32 "${bootdevice}"
 
 # formatting the root device
 mkfs.ext4 "${rootdevice}"
@@ -56,6 +37,8 @@ mkswap "${swapdevice}"
 # mounting devices
 swapon "${swapdevice}"
 mount "${rootdevice}" /mnt
+mkdir /mnt/esp
+mount "${bootdevice}" /mnt/esp
 
 # installing base package
 pacstrap /mnt base linux linux-firmware vim nano
@@ -86,15 +69,13 @@ $password
 $password
 EOF
 
-packages = ""
-
 arch-chroot /mnt << EOF
 locale-gen
 groupadd autologin
 useradd -m -G wheel,audio,video,storage,autologin "$user"
-pacman -S sudo grub networkmanager $packages --needed --noconfirm
+pacman -S sudo grub efibootmgr networkmanager --needed --noconfirm
 systemctl enable NetworkManager
-grub-install --target=i386-pc /dev/sda
+grub-install --target=x86_64-efi --efi-directory=esp --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 EDITOR="sed -i 's/# %wheel ALL=(ALL) ALL/ %wheel ALL=(ALL) ALL/'" visudo
 EOF
