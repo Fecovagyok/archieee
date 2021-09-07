@@ -86,8 +86,7 @@ $password
 $password
 EOF
 
-packages=""
-
+packages = "xorg-server virtualbox-guest-utils xorg-xinit rxvt-unicode openbox ttf-dejavu ttf-liberation obconf ntfs-3g thunar dmenu"
 arch-chroot /mnt << EOF
 locale-gen
 groupadd autologin
@@ -97,6 +96,7 @@ systemctl enable NetworkManager
 grub-install --target=i386-pc /dev/sda
 grub-mkconfig -o /boot/grub/grub.cfg
 EDITOR="sed -i 's/# %wheel ALL=(ALL) ALL/ %wheel ALL=(ALL) ALL/'" visudo
+echo "exec openbox-session" > "/home/${user}/.xinitrc"
 EOF
 
 arch-chroot /mnt passwd "${user}" << EOF
