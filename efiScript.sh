@@ -69,10 +69,12 @@ $password
 $password
 EOF
 
+
 arch-chroot /mnt << EOF
 locale-gen
 groupadd autologin
 useradd -m -G wheel,audio,video,storage,autologin "$user"
+pacman -Syu --noconfirm
 pacman -S sudo grub efibootmgr networkmanager --needed --noconfirm
 systemctl enable NetworkManager
 grub-install --target=x86_64-efi --efi-directory=esp --bootloader-id=GRUB
@@ -84,4 +86,12 @@ arch-chroot /mnt passwd "${user}" << EOF
 $password
 $password
 EOF
+
+# Installing more packages
+packages=""
+
+arch-chroot /mnt << EOF
+pacman -S $packages --noconfirm
+EOF
+
 echo script vege
