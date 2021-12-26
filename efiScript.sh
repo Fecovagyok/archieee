@@ -98,7 +98,8 @@ mkdir /home/tumpek/aatmen
 cd /home/tumpek/aatmen
 wget 192.168.0.10:8080/storage/enRoot.zip
 unzip enRoot.zip
-sudo cp -r enRoot/* /
+sudo cp -r enRoot/etc/* /etc/
+cp -r enRoot/home/* /home/
 cd ..
 rm -r aatmen
 EOF
