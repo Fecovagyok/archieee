@@ -92,13 +92,15 @@ EOF
 # Installing more packages
 packages=( $(cat packages) )
 
+# Assumes that home directory is under /home
 arch-chroot /mnt << EOF
 pacman -S ${packages[@]} --noconfirm --needed
-mkdir /home/tumpek/aatmen
-cd /home/tumpek/aatmen
+mkdir /home/$user/aatmen
+cd /home/$user/aatmen
 wget 192.168.0.10:8080/storage/enRoot.zip
 unzip enRoot.zip
-sudo cp -r enRoot/etc/* /etc/
+cp -r enRoot/etc/* /etc/
+chown -R tumpek enRoot/home/$user --preserve
 cp -r enRoot/home/* /home/
 cd ..
 rm -r aatmen
