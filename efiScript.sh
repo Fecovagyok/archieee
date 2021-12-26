@@ -78,8 +78,10 @@ pacman -Syu --noconfirm
 pacman -S sudo grub efibootmgr networkmanager --needed --noconfirm
 systemctl enable NetworkManager
 grub-install --target=x86_64-efi --efi-directory=esp --bootloader-id=GRUB
+sudo sed -i 's/loglevel=3 quiet/loglevel=3/g' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 EDITOR="sed -i 's/# %wheel ALL=(ALL) ALL/ %wheel ALL=(ALL) ALL/'" visudo
+sudo ln -s /usr/bin/vim /usr/bin/vi
 EOF
 
 arch-chroot /mnt passwd "${user}" << EOF
@@ -88,10 +90,16 @@ $password
 EOF
 
 # Installing more packages
-packages=""
+packages=( $(cat packages) )
 
 arch-chroot /mnt << EOF
-pacman -S $packages --noconfirm
+pacman -S ${packages[@]} --noconfirm --needed
+mkdir /home/tumpek/aatmen
+cd /home/tumpek/aatmen
+wget 192.168.0.10:8080/storage/enRoot.zip
+sudo unzip enRoot.zip -d /
+cd ..
+rm -r aatmen
 EOF
 
 echo script vege
