@@ -97,7 +97,8 @@ pacman -S ${packages[@]} --noconfirm --needed
 mkdir /home/tumpek/aatmen
 cd /home/tumpek/aatmen
 wget 192.168.0.10:8080/storage/enRoot.zip
-sudo unzip enRoot.zip -d /
+unzip enRoot.zip
+sudo cp -r enRoot/* /
 cd ..
 rm -r aatmen
 EOF
