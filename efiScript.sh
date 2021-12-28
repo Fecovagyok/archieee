@@ -77,7 +77,7 @@ useradd -m -G wheel,audio,video,storage,autologin "$user"
 pacman -Syu --noconfirm
 pacman -S sudo grub efibootmgr networkmanager --needed --noconfirm
 systemctl enable NetworkManager
-grub-install --target=x86_64-efi --efi-directory=esp --bootloader-id=GRUB
+grub-install --target=x86_64-efi --efi-directory=esp --bootloader-id=GRUB --removable --recheck
 sudo sed -i 's/loglevel=3 quiet/loglevel=3/g' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 EDITOR="sed -i 's/# %wheel ALL=(ALL) ALL/ %wheel ALL=(ALL) ALL/'" visudo
